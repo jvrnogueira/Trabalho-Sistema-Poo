@@ -7,7 +7,7 @@ Matricula: 20250019053
 ## Descrição
   Este projeto irá simular o funcionamento de um **"inventario"** (semelhante a uma mochila de um personagem), onde é possivel guardar,organizar e interagir com diferentes tipos de itens.
 
-## Diagram UML
+## Diagrama UML
 ```mermaid
 classDiagram
   class Item{
