@@ -8,31 +8,33 @@ Matricula: 20250019053
   Este projeto irá simular o funcionamento de um **"inventario"** (semelhante a uma mochila de um personagem), onde é possivel guardar,organizar e interagir com diferentes tipos de itens.
 
 ## Diagrama UML
+## Relações de Classes: Composição e Agregação
+
+O sistema implementa relações estruturais rigorosas para garantir o gerenciamento correto da memória e refletir a lógica do domínio. Abaixo está a representação UML dessas relações:
+
 ```mermaid
 classDiagram
-  class Item{
-    #int id
-    #string nome
-    #double peso
-    #string raridade
-    +Item(int id, string nome, double peso, string raridade)
-    +virtual ~Item()
-}
+    class item_stats {
+        - int power_
+        + item_stats(int power)
+        + ~item_stats()
+    }
 
-class Equipamento{
-  -int durabilidade
-  -int bonusDefesa
-  -int bonusAtaque
-  +Equipamento(int id, string nome, double peso, string raridade, inst durabilidade, int ataque, int defesa)
-}
-class Inventario {
-  -int capacidadeMaxima
-  -double pesoMaximo
-  -vector ~Item*~itens
-  +Inventario(int capacidade, double pesoMax)
-  ~Inventario()
-}
+    class item {
+        - string name_
+        - item_stats* stats_
+        + item(string name, int power)
+        + ~item()
+        + get_name() string
+    }
 
-Item <-- Equipamento: Herança
-Item <-- Consumivel: Herança
-Inventario "1" o--"*"Item:Agregação/Composição por ponteiros
+    class inventory {
+        - string owner_name_
+        - vector~item*~ items_list_
+        + inventory(string owner_name)
+        + ~inventory()
+        + add_item(item* new_item) void
+    }
+
+    item *-- item_stats : (◆) Composição
+    inventory o-- item : (◇) Agregação
