@@ -38,3 +38,10 @@ classDiagram
 
     item *-- item_stats : (◆) Composição
     inventory o-- item : (◇) Agregação
+
+## Smart Pointers
+
+A gerência de memória do projeto foi modernizada substituindo *raw pointers* (`*`) por *smart pointers* (`<memory>`), visando segurança e eliminando a necessidade de desalocação manual (`delete`).
+
+* **Composição (`item` ◆ `item_stats`):** Utilizei `std::unique_ptr` porque a classe `item` tem posse exclusiva sobre seus atributos de status, garantindo que o ciclo de vida do dependente acabe exatamente junto com o dono.
+* **Agregação (`inventory` ◇ `item`):** Utilizei `std::shared_ptr` porque os itens são recursos genuinamente compartilhados (podem pertencer a um inventário, existir no ambiente ou pertencer a múltiplos gerenciadores) e sobrevivem à destruição do inventário.

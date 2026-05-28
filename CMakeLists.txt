@@ -9,5 +9,5 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Arquivos fonte
 add_executable(MeuPrograma
-    SRC/main.cpp
+    src/main.cpp
 )
