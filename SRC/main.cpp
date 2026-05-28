@@ -110,3 +110,30 @@ public:
         return false;
     }
 };
+
+int main() {
+    std::cout << "=== (1) CRIANDO ITENS INDEPENDENTES ===" << std::endl;
+  
+    item* potion = new item("Health Potion", 10);
+    item* sword = new item("Iron Sword", 55);
+
+    std::cout << "\n=== (2) INICIANDO ESCOPO DO INVENTARIO (AGREGACAO) ===" << std::endl;
+    {
+
+        inventory hero_bag("Hero");
+        
+        hero_bag.add_item(potion);
+        hero_bag.add_item(sword);
+        
+        std::cout << "\nSaindo do escopo do inventario (destrutor sera chamado):" << std::endl;
+
+    
+    std::cout << "\n=== (3) DESTRUICAO MANUAL DOS ITENS (COMPOSICAO) ===" << std::endl;
+    std::cout << "Como a agregacao preservou os itens, podemos deleta-los agora:" << std::endl;
+
+    delete potion;
+    delete sword;
+
+    std::cout << "\nFim da execucao." << std::endl;
+    return 0;
+}
