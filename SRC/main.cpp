@@ -1,22 +1,43 @@
 #include <iostream>
 #include <string>
+#include <vector>
+
+class item_stats{
+private:
+  int power_;
+public:
+//construtor
+item_stats(int power): power_(power){
+  std::cout << " ~item_stats("<< power_ <<") destruido" << std:endl;
+}
+//get
+int get_power() const {return power_;}
+};
 
 class item{
 private:
   int id_;
   std::string name_;
   double weight_;
-
+  item_stats* stats_;
 public:
 // Construtor
-item(int id, std::string name, double weight)
-  :id_(id), name_(name), weight_(weight) {}
+item(int id, std::string name, double weight,int power)
+  :id_(id), name_(name), weight_(weight) {std::cout<<"item(\""<<name_<<"\")destruido"<<std::endl;
+  stats_ = new item_stats(power);}
+
+~item(){
+  delete stats_;
+  std::cout<<" ~item (\""<<name_<<"\")destruido"<<std::endl;
+}
 
 // gettera
 int get_id() const{return id_;}
 std::string get_name() const {return name_;}
 double get_weight() const {return weight_:}
 }
+
+
 class equipment {
 private:
     std::string name_;
