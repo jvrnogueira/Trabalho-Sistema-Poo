@@ -1,88 +1,37 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <memory>
+#include "Items.hpp"
 
 
-class item_stats {
-private:
-    int power_;
-
-public:
-    item_stats(int power) : power_(power) {
-        std::cout << "    item_stats(" << power_ << ") criado" << std::endl;
-    }
-
-    ~item_stats() {
-        std::cout << "    ~item_stats(" << power_ << ") destruido" << std::endl;
-    }
-    
-    int get_power() const { return power_; }
-};
-
-
-class item {
-private:
-    std::string name_;
-    std::unique_ptr<item_stats> stats_; 
-
-public:
-    item(std::string name, int power) : name_(name) {
-        std::cout << "  Item(\"" << name_ << "\") criado" << std::endl;
-        stats_ = std::make_unique<item_stats>(power); 
-    }
-
-    ~item() {
-
-        std::cout << "  ~Item(\"" << name_ << "\") destruido" << std::endl;
-    }
-
-    std::string get_name() const { return name_; }
-};
-
-
-class inventory {
-private:
-    std::string owner_name_;
-    std::vector<std::shared_ptr<item>> items_list_; 
-
-public:
-    inventory(std::string owner_name) : owner_name_(owner_name) {
-        std::cout << "Inventory(\"" << owner_name_ << "\") criado" << std::endl;
-    }
-
-    ~inventory() {
-        std::cout << "~Inventory(\"" << owner_name_ << "\") destruido (itens estao a salvo na memoria)" << std::endl;
-    }
-
-    void add_item(std::shared_ptr<item> new_item) {
-        items_list_.push_back(new_item);
-        std::cout << "-> " << new_item->get_name() << " guardado no inventario." << std::endl;
-    }
-};
-
+void activate_item(const IUsable& item) {
+    item.use();
+}
 
 int main() {
-    std::cout << "=== (1) CRIANDO ITENS INDEPENDENTES ===" << std::endl;
-    std::shared_ptr<item> potion = std::make_shared<item>("Health Potion", 10);
-    std::shared_ptr<item> sword = std::make_shared<item>("Iron Sword", 55);
-
-    std::cout << "\n=== (2) INICIANDO ESCOPO DO INVENTARIO (AGREGACAO) ===" << std::endl;
-    {
-        inventory hero_bag("Hero");
-        
-        hero_bag.add_item(potion);
-        hero_bag.add_item(sword);
-        
-        std::cout << "\nSaindo do escopo do inventario (destrutor sera chamado):" << std::endl;
-    }
+    std::cout << "=== (Q1/Q2) CRIANDO VETOR (POLIMORFISMO) ===\n";
     
-    std::cout << "\n=== (3) DESTRUICAO DOS ITENS (COMPOSICAO) ===" << std::endl;
-    std::cout << "Como a agregacao preservou os itens, podemos limpa-los agora:" << std::endl;
+    std::vector<std::unique_ptr<ItemBase>> inventory; 
+    
+    
+    inventory.push_back(std::make_unique<Weapon>("Iron Sword", 55));
+    inventory.push_back(std::make_unique<Consumable>("Health Potion", 20));
+    inventory.push_back(std::make_unique<Weapon>("Magic Staff", 80));
 
-    potion.reset();
-    sword.reset();
+    std::cout << "\n=== ITERANDO ITENS (DESPACHO VIRTUAL) ===\n";
+    for (const auto& item : inventory) {
+        item->display(); 
+    }
 
-    std::cout << "\nFim da execucao." << std::endl;
+    std::cout << "\n=== FUNCAO LIVRE (MAIOR VALOR) ===\n";
+    const ItemBase* strongest = get_strongest_item(inventory);
+    if (strongest) {
+        std::cout << "Maior poder: " << strongest->get_name() << " com " << strongest->get_power() << "\n";
+    }
+
+    std::cout << "\n=== (Q3) INTERFACE PURA POR REFERENCIA ===\n";
+    Consumable elixir("Elixir Supremo", 150);
+    activate_item(elixir); 
+
+    std::cout << "\n=== SAINDO DO ESCOPO (TESTE DE DESTRUICAO) ===\n";
+    inventory.clear(); 
+
     return 0;
 }
